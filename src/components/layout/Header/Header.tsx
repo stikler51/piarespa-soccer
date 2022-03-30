@@ -13,7 +13,7 @@ import { UserContext } from '../../../context/userContext'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
-  const { user } = useContext(UserContext)
+  const { user, LOGOUT } = useContext(UserContext)
 
   return (
     <AppBar position="static">
@@ -30,6 +30,9 @@ const Header: React.FC = () => {
               {user.email}
             </Typography>
             <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.email?.slice(0, 1).toUpperCase()}</Avatar>
+            <Button fullWidth variant="outlined" color="inherit" onClick={LOGOUT}>
+              Log Out
+            </Button>
           </Stack>
         )}
         {!user && (
