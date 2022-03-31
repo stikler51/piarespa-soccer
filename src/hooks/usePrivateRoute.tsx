@@ -1,10 +1,10 @@
-import { useEffect, useContext } from 'react'
-import { UserContext } from '../context/userContext'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import UserStore from '../stores/UserStore'
 
 const usePrivateRoute = () => {
-  const { user } = useContext(UserContext)
   const navigate = useNavigate()
+  const { user } = UserStore
 
   useEffect(() => {
     if (!user) {

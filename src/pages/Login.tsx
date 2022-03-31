@@ -1,11 +1,13 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect } from 'react'
 import '../App.css'
 import AuthForm from '../components/forms/AuthForm/AuthForm'
-import { UserContext } from '../context/userContext'
 import { useNavigate } from 'react-router-dom'
+import UserStore from '../stores/UserStore'
+import { observer } from 'mobx-react-lite'
+
 function Login() {
   const navigate = useNavigate()
-  const { user } = useContext(UserContext)
+  const { user } = UserStore
   useEffect(() => {
     if (user) {
       navigate('/')
@@ -18,4 +20,4 @@ function Login() {
   )
 }
 
-export default Login
+export default observer(Login)

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -7,16 +7,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
-import { UserContext } from '../../../context/userContext'
-// import { signInWithEmailAndPassword } from 'firebase/auth'
-// import { auth } from '../../../services/auth'
+import { observer } from 'mobx-react-lite'
+import UserStore from '../../../stores/UserStore'
 
-export default function SignIn() {
+function SignIn() {
   const { register, handleSubmit } = useForm()
-  const user = useContext(UserContext)
+  const user = UserStore
 
   const onSubmit: SubmitHandler<FieldValues> = ({ email, password }) => {
-    user.LOGIN({ email, password })
+    user.login({ email, password })
   }
 
   return (
@@ -63,10 +62,18 @@ export default function SignIn() {
           </Button>
         </Box>
 
-        <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={user.LOGOUT}>
+        <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={user.logout}>
           Log Out
         </Button>
+
+        {user.error && (
+          <Typography component="p" sx={{ fontSize: 12 }} color="red">
+            {user.error.message}
+          </Typography>
+        )}
       </Box>
     </Container>
   )
 }
+
+export default observer(SignIn)

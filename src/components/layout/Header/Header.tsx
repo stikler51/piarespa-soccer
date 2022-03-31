@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -9,11 +9,12 @@ import Avatar from '@mui/material/Avatar'
 import { Stack } from '@mui/material'
 import { deepOrange } from '@mui/material/colors'
 import { useNavigate } from 'react-router-dom'
-import { UserContext } from '../../../context/userContext'
+import { observer } from 'mobx-react-lite'
+import UserStore from '../../../stores/UserStore'
 
-const Header: React.FC = () => {
+const Header: React.FC<any> = () => {
   const navigate = useNavigate()
-  const { user, LOGOUT } = useContext(UserContext)
+  const { user, logout } = UserStore
 
   return (
     <AppBar position="static">
@@ -30,7 +31,7 @@ const Header: React.FC = () => {
               {user.email}
             </Typography>
             <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.email?.slice(0, 1).toUpperCase()}</Avatar>
-            <Button fullWidth variant="outlined" color="inherit" onClick={LOGOUT}>
+            <Button fullWidth variant="outlined" color="inherit" onClick={logout}>
               Log Out
             </Button>
           </Stack>
@@ -45,4 +46,4 @@ const Header: React.FC = () => {
   )
 }
 
-export default Header
+export default observer(Header)
