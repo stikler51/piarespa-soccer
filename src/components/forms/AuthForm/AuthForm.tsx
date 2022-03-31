@@ -9,12 +9,17 @@ import Container from '@mui/material/Container'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { observer } from 'mobx-react-lite'
 import UserStore from '../../../stores/UserStore'
+import { Checkbox, FormControlLabel } from '@mui/material'
 
 function SignIn() {
   const { register, handleSubmit } = useForm()
   const user = UserStore
 
-  const onSubmit: SubmitHandler<FieldValues> = ({ email, password }) => {
+  const onSubmit: SubmitHandler<FieldValues> = ({ email, password, newAccount }) => {
+    if (newAccount) {
+      user.register({ email, password })
+      return
+    }
     user.login({ email, password })
   }
 
@@ -57,14 +62,11 @@ function SignIn() {
             id="password"
             autoComplete="current-password"
           />
+          <FormControlLabel {...register('newAccount')} control={<Checkbox />} label="Register new account" />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
             Log In
           </Button>
         </Box>
-
-        <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={user.logout}>
-          Log Out
-        </Button>
 
         {user.error && (
           <Typography component="p" sx={{ fontSize: 12 }} color="red">

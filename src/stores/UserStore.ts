@@ -1,16 +1,19 @@
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+/* eslint-disable no-unused-vars */
+import { signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth'
 import { makeAutoObservable } from 'mobx'
 import { auth } from '../services/auth'
+import { saveUser } from '../services/db'
 
-interface UserPayload {
+type UserPayload = {
   email: string
   password: string
 }
-interface IUserStore {
+
+type IUserStore = {
   user: any
   error: any
-  // eslint-disable-next-line no-unused-vars
   login: (payload: UserPayload) => void
+  register: (payload: UserPayload) => void
   logout: () => void
 }
 
@@ -32,6 +35,20 @@ const UserStore: IUserStore = makeAutoObservable({
       .then(() => {
         UserStore.user = null
         UserStore.error = null
+      })
+      .catch((error) => {
+        UserStore.error = error
+      })
+  },
+  register: ({ email, password }) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(({ user }) => {
+        UserStore.user = user
+        UserStore.error = null
+        return user
+      })
+      .then((user) => {
+        saveUser(user.uid, user.email)
       })
       .catch((error) => {
         UserStore.error = error
